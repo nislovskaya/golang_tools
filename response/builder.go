@@ -19,6 +19,7 @@ type Response interface {
 
 	BadRequest(message string)
 	Unauthorized(message string)
+	Conflict(message string)
 	NotFound(message string)
 	InternalServerError(message string)
 }
@@ -52,6 +53,13 @@ func (r *response) BadRequest(message string) {
 func (r *response) Unauthorized(message string) {
 	r.json(http.StatusUnauthorized, &errors.Error{
 		Code:    http.StatusUnauthorized,
+		Message: message,
+	})
+}
+
+func (r *response) Conflict(message string) {
+	r.json(http.StatusConflict, &errors.Error{
+		Code:    http.StatusConflict,
 		Message: message,
 	})
 }

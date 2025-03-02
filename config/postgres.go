@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func ConnectDB(logger *logrus.Entry) *gorm.DB {
+func ConnectPostgres(logger *logrus.Entry) *gorm.DB {
 	host, err := GetConfigValue("DB_HOST")
 	if err != nil {
 		panic(fmt.Sprintf("failed to get config value %s", err.Error()))

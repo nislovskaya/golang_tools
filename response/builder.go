@@ -19,8 +19,10 @@ type Response interface {
 
 	BadRequest(message string)
 	Unauthorized(message string)
-	Conflict(message string)
+	Forbidden(message string)
 	NotFound(message string)
+	Conflict(message string)
+
 	InternalServerError(message string)
 }
 
@@ -57,9 +59,9 @@ func (r *response) Unauthorized(message string) {
 	})
 }
 
-func (r *response) Conflict(message string) {
-	r.json(http.StatusConflict, &errors.Error{
-		Code:    http.StatusConflict,
+func (r *response) Forbidden(message string) {
+	r.json(http.StatusForbidden, &errors.Error{
+		Code:    http.StatusForbidden,
 		Message: message,
 	})
 }
@@ -67,6 +69,13 @@ func (r *response) Conflict(message string) {
 func (r *response) NotFound(message string) {
 	r.json(http.StatusNotFound, &errors.Error{
 		Code:    http.StatusNotFound,
+		Message: message,
+	})
+}
+
+func (r *response) Conflict(message string) {
+	r.json(http.StatusConflict, &errors.Error{
+		Code:    http.StatusConflict,
 		Message: message,
 	})
 }

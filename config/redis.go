@@ -7,25 +7,25 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func ConnectRedis(logger *logrus.Entry) *redis.Client {
+func ConnectRedis(logger *logrus.Entry) (*redis.Client, error) {
 	host, err := GetConfigValue("REDIS_HOST")
 	if err != nil {
-		panic(fmt.Sprintf("failed to get config value %s", err.Error()))
+		return nil, fmt.Errorf("failed to get `REDIS_HOST`: %w", err)
 	}
 
 	port, err := GetConfigValue("REDIS_PORT")
 	if err != nil {
-		panic(fmt.Sprintf("failed to get config value %s", err.Error()))
+		return nil, fmt.Errorf("failed to get `REDIS_PORT`: %w", err)
 	}
 
 	user, err := GetConfigValue("REDIS_USER")
 	if err != nil {
-		panic(fmt.Sprintf("failed to get config value %s", err.Error()))
+		return nil, fmt.Errorf("failed to get `REDIS_USER`: %w", err)
 	}
 
 	pass, err := GetConfigValue("REDIS_PASSWORD")
 	if err != nil {
-		panic(fmt.Sprintf("failed to get config value %s", err.Error()))
+		return nil, fmt.Errorf("failed to get `REDIS_PASSWORD`: %w", err)
 	}
 
 	redisAddr := fmt.Sprintf("%s:%s", host, port)
@@ -37,8 +37,8 @@ func ConnectRedis(logger *logrus.Entry) *redis.Client {
 	logger.Infof("Connected to redis: %s", redisAddr)
 
 	if err = client.Ping(context.Background()).Err(); err != nil {
-		panic(fmt.Sprintf("failed to connect to redis: %s", err.Error()))
+		return nil, fmt.Errorf("failed to connect to redis: %w", err)
 	}
 
-	return client
+	return client, nil
 }
